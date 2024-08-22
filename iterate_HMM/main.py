@@ -237,7 +237,7 @@ def combine_fasta_files(file_list, output_file):
 
 ############################################################################################
 
-def main_pipeline(thresholds_file, real_file, decoy_files, iterations=3, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'): 
+def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'): 
     num_decoy = 10000
     setup_directory(output_dir)
     setup_directory(csv_dir)
@@ -247,7 +247,7 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=3, csv_dir
     for iteration in range(1,iterations+1):
         thresholds_file = [f'./input_csv/i{iteration}/all_L7_decoy_iteration_{iteration}.fasta.csv']
         thresholds = calculate_thresholds(thresholds_file) # [1] cal SPS of i1_all_L7_decoys → get thresholds
-        real_file = [f'./input_csv/i{iteration}/real.fasta.csv']
+        real_file = [f'./input_csv/i{iteration}/aligned_real.fasta.csv']
 
         for file in real_file: # for file in real_file + decoy_files:
             df = pd.read_csv(file)
@@ -347,7 +347,7 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=3, csv_dir
 
         # decoy_fasta = glob.glob("./result_test/decoy_fasta/*.fasta")
         decoy_fasta = [f"./result_test/decoy_fasta/all_L7_decoy_iteration_{iteration+1}.fasta"]
-        real_fasta = ["./real_fasta/real.fasta"]
+        real_fasta = ["./real_fasta/aligned_real.fasta"]
 
         # csv_directory = os.path.join(output_dir, "csv")
         # setup_directory(csv_directory)  # 確保 csv 目錄已創建
@@ -399,7 +399,7 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=3, csv_dir
         print(f"########################## plot interaton {iteration} ##########################" ) 
 
         # 定義CSV文件路徑
-        files = [f'./input_csv/i{iteration}/real.fasta.csv']   
+        files = [f'./input_csv/i{iteration}/aligned_real.fasta.csv']   
         labels = ['real']
         simplified_classification = {k.split('|')[1]: v for k, v in classification.items()}
         simplified_L2_name = {name.split('|')[1] for name in L2_name}
@@ -470,7 +470,7 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=3, csv_dir
 
 # Run the main pipeline
 thresholds_file = ['./input_csv/i1/all_L7_decoy.csv']
-real_file = ['./input_csv/i1/real.csv']
+real_file = ['./input_csv/i1/aligned_real.csv']
 decoy_files = ['./input_csv/i1/all_L7_decoy.csv', './input_csv/i1/L2_decoy.csv', './input_csv/i1/L3_decoy.csv']
 
 main_pipeline(thresholds_file, real_file, decoy_files)

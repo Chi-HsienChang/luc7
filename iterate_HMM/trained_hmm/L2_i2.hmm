@@ -1,5 +1,5 @@
 HMMER3/f [3.4 | Aug 2023]
-NAME  L2_type_iteration_1_real_hmmalign_trim.sto_hmmalign_trim
+NAME  L2_type_iteration_1_aligned_real_hmmalign_trim.sto_hmmalign_trim
 LENG  222
 ALPH  amino
 RF    yes
@@ -7,7 +7,7 @@ MM    no
 CONS  yes
 CS    no
 MAP   yes
-DATE  Thu Aug 22 15:13:24 2024
+DATE  Thu Aug 22 16:08:54 2024
 NSEQ  585
 EFFN  1.682625
 CKSUM 2311640642
