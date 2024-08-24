@@ -262,9 +262,11 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir
             if file in real_file:  # Check if the current file is a real file to split
                 l2_df = df[df['Classification'] == 'L2-type']
                 l3_df = df[df['Classification'] == 'L3-type']
+                non_df = df[df['Classification'] == 'Unclassified'] 
+
                 l2_filename = os.path.join(output_dir, f'L2_type_iteration_{iteration}_{os.path.basename(file)}')
                 l3_filename = os.path.join(output_dir, f'L3_type_iteration_{iteration}_{os.path.basename(file)}')
-                all_L7_filename = os.path.join(output_dir, f'all_L7_iteration_{iteration}_{os.path.basename(file)}') 
+                # all_L7_filename = os.path.join(output_dir, f'all_L7_iteration_{iteration}_{os.path.basename(file)}') 
 
                 l2_df.to_csv(l2_filename, index=False)
                 l3_df.to_csv(l3_filename, index=False)
@@ -360,7 +362,7 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir
             output_csv_path = os.path.join(csv_dir, f"i{iteration+1}/{os.path.basename(fasta_file)}.csv")
 
             with open(output_csv_path, 'w', newline='') as csvfile:
-                fieldnames = ['name', 'L2', 'L3', 'Length', 'AA']
+                fieldnames = ['name', 'L2', 'L3', 'Length', 'AA', 'Clade']
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 writer.writeheader()
 
@@ -392,9 +394,9 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir
                     l3_score = l3_scores.get(name, "N/A")
                     length, aa = len(seq.sequence), seq.sequence
                     if fasta_file in real_fasta:
-                        writer.writerow({'name': name.split('|')[0], 'L2': f"{l2_score:.2f}" if l2_score != "N/A" else "N/A", 'L3': f"{l3_score:.2f}" if l3_score != "N/A" else "N/A", 'Length': length, 'AA': aa})
+                        writer.writerow({'name': name.split('|')[0], 'L2': f"{l2_score:.2f}" if l2_score != "N/A" else "N/A", 'L3': f"{l3_score:.2f}" if l3_score != "N/A" else "N/A", 'Length': length, 'AA': aa, 'Clade': aa})
                     else:
-                        writer.writerow({'name': name.split('-')[1], 'L2': f"{l2_score:.2f}" if l2_score != "N/A" else "N/A", 'L3': f"{l3_score:.2f}" if l3_score != "N/A" else "N/A", 'Length': length, 'AA': aa})
+                        writer.writerow({'name': name.split('-')[1], 'L2': f"{l2_score:.2f}" if l2_score != "N/A" else "N/A", 'L3': f"{l3_score:.2f}" if l3_score != "N/A" else "N/A", 'Length': length, 'AA': aa, 'Clade': 'Decoy'})
 
         print(f"########################## plot interaton {iteration} ##########################" ) 
 
