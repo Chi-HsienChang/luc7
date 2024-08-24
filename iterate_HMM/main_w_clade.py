@@ -237,7 +237,7 @@ def combine_fasta_files(file_list, output_file):
 
 ############################################################################################
 
-def main_pipeline(thresholds_file, real_file, decoy_files, iterations=2, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'): 
+def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'): 
     num_decoy = 10000
     setup_directory(output_dir)
     setup_directory(csv_dir)
@@ -409,86 +409,70 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=2, csv_dir
 
         print(f"########################## plot interaton {iteration} ##########################" ) 
 
-        # 定義CSV文件路徑
-        files = [f'./input_csv/i{iteration}/aligned_real.fasta.csv']   
-        labels = ['real']
+        # 讀取並處理每個文件
+        # 读取 CSV 文件
+        file_path = f'./input_csv/i{iteration}/aligned_real.fasta.csv'  # 需要替换 {iteration} 为实际迭代数
+        df = pd.read_csv(file_path)
+
+        # 计算 x 和 y 值
+        df['x'] = df['L2'] / df['Length']
+        df['y'] = df['L3'] / df['Length']
+
+        # 创建图表
+        plt.figure(figsize=(10, 8))
+
+        # 获取默认颜色循环
+        prop_cycle = plt.rcParams['axes.prop_cycle']
+        colors = prop_cycle.by_key()['color']
+
+        # 根据 Clade 分组并绘制
+        for (clade, group), color in zip(df.groupby('Clade'), colors):
+            plt.scatter(group['x'], group['y'], color=color, label=clade, alpha=0.6)
+
+        plt.plot([0, 2], [0, 2], 'k--', label='Diagonal line')
+
+        ############################################################################################
         simplified_classification = {k.split('|')[1]: v for k, v in classification.items()}
         simplified_L2_name = {name.split('|')[1] for name in L2_name}
         simplified_L3_name = {name.split('|')[1] for name in L3_name}
-
-
         # 颜色和标记设置
-        colors = {'L2': 'blue', 'L3': 'red', 'Other': 'LightGrey'}
-        markers = {'Animal': 'o', 'Plant': 'x', 'Fungi': '^', 'Unknown': '.'}
+        colors_GT = {'L2': 'blue', 'L3': 'red'}
+        markers_GT = {'Animal': 'o', 'Plant': 'x', 'Fungi': '^'}
 
-        # 创建空的DataFrame
-        # all_data = pd.DataFrame()
+        known_df = df[df['name'].apply(lambda x: simplified_classification.get(x, 'Unknown') != 'Unknown')]
+    
 
-        # 读取并处理每个文件
-        for file, label in zip(files, labels):
-            df = pd.read_csv(file)
-            df['name'] = df['name']
-            df['x'] = df['L2'] / df['Length']
-            df['y'] = df['L3'] / df['Length']
-            df['Label'] = label
+        added_labels = set()
 
-            plt.figure(figsize=(10, 6))
-            handles, labels = [], []
+        for index, row in known_df.iterrows():
+            if row['name'] in simplified_L2_name:
+                group = 'L2'
+                color_GT = colors_GT['L2']
+            elif row['name'] in simplified_L3_name:
+                group = 'L3'
+                color_GT = colors_GT['L3']
+            else:
+                group = 'Unknown'  # 设置未知组别
 
-            ############################################################################################
-            unique_clades = df['Clade'].unique()
-            color_map = plt.get_cmap('nipy_spectral')  # 使用nipy_spectral颜色图
-            clade_colors = {clade: color_map(i / len(unique_clades)) for i, clade in enumerate(unique_clades)}
-            
-            for clade, group_df in df.groupby('Clade'):
-                color = clade_colors.get(clade, 'grey')
-                marker = markers.get(clade, '.')
-                sc = plt.scatter(group_df['x'], group_df['y'], color=color, marker=marker, label=clade)
+            if group != 'Unknown':  # 只有当组别不是 Unknown 时才绘制
+                category = simplified_classification.get(row['name'], 'Unknown')
+                marker = markers_GT.get(category, '.')
+                plot_label = f'{group} {category}'
 
-                if clade not in labels:
-                    handles.append(sc)
-                    labels.append(clade)
-            ############################################################################################
+                # 检查标签是否已经添加到图例中
+                if plot_label not in added_labels:
+                    plt.scatter(row['x'], row['y'], color=color_GT, marker=marker, label=plot_label)
+                    added_labels.add(plot_label)
+                else:
+                    plt.scatter(row['x'], row['y'], color=color_GT, marker=marker)
 
-            # 先绘制Unknown
-            unknown_df = df[df['name'].apply(lambda x: simplified_classification.get(x, 'Unknown') == 'Unknown')]
-            known_df = df[df['name'].apply(lambda x: simplified_classification.get(x, 'Unknown') != 'Unknown')]
-
-            for df_subset, is_unknown in [(unknown_df, True), (known_df, False)]:
-                for index, row in df_subset.iterrows():
-                    if row['name'] in simplified_L2_name:
-                        group = 'L2'
-                        color = colors['L2']
-                    elif row['name'] in simplified_L3_name:
-                        group = 'L3'
-                        color = colors['L3']
-                    else:
-                        group = 'Other'
-                        color = colors['Other']
-
-                    category = simplified_classification.get(row['name'], 'Unknown')
-                    marker = markers[category]
-                    plot_label = f'{group} {category}' if is_unknown else f'{group} {category}'
-
-                    # 绘制并更新图例
-                    sc = plt.scatter(row['x'], row['y'], color=color, marker=marker, label=plot_label)
-                    if plot_label not in labels:
-                        handles.append(sc)
-                        labels.append(plot_label)
-
-            # 添加对角虚线
-            plt.plot([0, 2], [0, 2], 'k--', label='Diagonal line')
-
-            plt.xlabel('L2 Score / Length')
-            plt.ylabel('L3 Score / Length')
-            plt.xlim(0, 2.0)
-            plt.ylim(0, 2.0)
-            plt.title(f'Iteration {iteration} with {num_decoy} decoys')
-
-            # 排序图例，鲜红色（L3）在蓝色（L2）之前
-            handles, labels = zip(*sorted(zip(handles, labels), key=lambda t: t[1], reverse=True))
-            plt.legend(handles, labels)
-            plt.savefig(f"i{iteration}.png")
+        # 添加图例和标签
+        plt.xlabel('L2 Score / Length')
+        plt.ylabel('L3 Score / Length')
+        plt.title(f'Iteration {iteration} with {num_decoy} decoys')
+        plt.legend(title='Clade')
+        plt.grid(True)
+        plt.savefig(f"i{iteration}.png")
 
     print("Pipeline completed successfully.")
 
