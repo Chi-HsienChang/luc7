@@ -435,6 +435,21 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=2, csv_dir
             plt.figure(figsize=(10, 6))
             handles, labels = [], []
 
+            ############################################################################################
+            unique_clades = df['Clade'].unique()
+            color_map = plt.get_cmap('nipy_spectral')  # 使用nipy_spectral颜色图
+            clade_colors = {clade: color_map(i / len(unique_clades)) for i, clade in enumerate(unique_clades)}
+            
+            for clade, group_df in df.groupby('Clade'):
+                color = clade_colors.get(clade, 'grey')
+                marker = markers.get(clade, '.')
+                sc = plt.scatter(group_df['x'], group_df['y'], color=color, marker=marker, label=clade)
+
+                if clade not in labels:
+                    handles.append(sc)
+                    labels.append(clade)
+            ############################################################################################
+
             # 先绘制Unknown
             unknown_df = df[df['name'].apply(lambda x: simplified_classification.get(x, 'Unknown') == 'Unknown')]
             known_df = df[df['name'].apply(lambda x: simplified_classification.get(x, 'Unknown') != 'Unknown')]
@@ -514,7 +529,7 @@ with open(fasta_file_path, 'r') as fasta_file:
             name_to_lineage[name] = named_lineage
 
 # Now the name_to_lineage dictionary is ready for use
-print(name_to_lineage)  # Print the dictionary to verify its contents
+# print(name_to_lineage)  # Print the dictionary to verify its contents
 
 
 main_pipeline(thresholds_file, real_file, decoy_files)
