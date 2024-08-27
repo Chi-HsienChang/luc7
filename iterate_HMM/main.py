@@ -203,7 +203,7 @@ def calculate_thresholds(thresholds_files):
         min_sps = min(min_sps, df['SPS'].min())
     return {'L2': max_sps, 'L3': min_sps}
 
-def run_cd_hit(fasta_input, fasta_output, threshold=0.7, word_size=5):
+def run_cd_hit(fasta_input, fasta_output, threshold=0.5, word_size=3):
     """Run CD-HIT to cluster sequences."""
     cmd = f"cd-hit -i {fasta_input} -o {fasta_output} -c {threshold} -n { word_size}"
     subprocess.run(cmd, shell=True, check=True)
