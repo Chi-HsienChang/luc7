@@ -1,36 +1,32 @@
 # STOCKHOLM 1.0
 
-A0A016T530         --MRDMIAQLMGSQKEGEE.GR..DLPPYHHPSVCRAYLIGCCPYELVPDS......RLQgLVSCRKTHEPAHKAD............FLKAQKERDHY.....YDVDAFDILENAIRIVDNEISRIKDKLDRE---------AREQTDT-..AE-----AVKTQR-------------------------.........
-#=GR A0A016T530 PP ..899**************.**..9************************99......975499*************............***********.....***************************992.........2233444...22.....222333..................................
-A0A022RH43         DALRKQLDVLMGANRNGDT.EE..VSRKYYDRDVCRLFLAGLCPHELFQLT......KMD.KGPCPKIHSLQLRKE............YQEAKAKDVDN.....YDKDLEDNIDRLIVECDRKISRALKRLDEEDAKAAIAISVSEVTQAPdiIEISKQIKEKMKEADQADLEGNTDMKIRALELLDELRAtradkqatl
-#=GR A0A022RH43 PP 9******************.**..***************************......***.***************............***********.....**********************************************999************77777777777777777777777776777777777
-A0A024GB74         -------------------.--..---------------------------......-MD.LGECPKLHLSNLRTK............YEKDT-NKSSG.....YEYELERELLRFISDLDKKIYRAQKRLEEQEGSKAPSLMDVENCKEV..LEITAEIQEAMLKAEEAGNEGQVDLSMELMEKVEDLKQ.........
-#=GR A0A024GB74 PP ..........................................................9*.***************............*9887.55678.....***********************************************..*****************999777766666666666544.........
-A0A060S7T9         --QRKLLEQMMGPEAMGV-.SN..ANLHWSDEKVCRNFLCGTCPHTLFTNT......KMD.LGACPKSHTERLKTE............FLAAREANPNDpifarFQAEYEANIFAFVDECDRRIRAAHRRLEK--------------TPE-..-E--------NAKTTNLMRE------------------.........
-#=GR A0A060S7T9 PP ..7**************8..56..9**************************......***.***************............********9999*********************************..............999....6........7889999999...........................
-A0A061D5B0         DEMRAQWEALMGNLENPAD.PK..ETKSFEDKDVCKMYLVGLCPHDLFENTvgaclpI--.LTPCRSITSVRARCStvtscerskhilYLEQRKTRYYN.....YEAETLRFIIPLIEDCDRRVQRGRVRAED-DV---------ACKQT-..---------------TLDDA------------------.........
-#=GR A0A061D5B0 PP 78****************9.**..***************************6666540...55666666655554434444444446699*********.....***************************99.21.........12222..................12222...........................
-A0A067BJQ2         DAQRALLDELMGRNRDGDKpQE..DIRDFRDQRVCKRFLCGLCPHDLFQNT......KMD.MGECPKLHLPKLKLA............YEEDRAKNQRDy...gYEADLERELVRYVSDVEKKISRALKRLDEQDGARVSSMLDIENNKEV..LEITAEIAELMQKAEDAGNEGEVDLSMELMAKVE----.........
-#=GR A0A067BJQ2 PP 9****************98356..789************************......***.***************............***999999987...89****************************9999999999********..*************999999944333333222222.............
-A0A081A1E7         DAQRALLDSLMGLNRDGDR.PDddATMDFRHPRVCKPYLCGLCPRELFQNT......RLD.LGTCKSLHLPTLRLA............YEEKKSTRDFG.....YERELANELSRLLADVEKKIARAQRRLAED-G------------DD-..-E------QAPAQILQLTQ-------------------.........
-#=GR A0A081A1E7 PP 9*****************7.5433899************************......***.***************............***********.....*****************************2.1............11....2......11222333333............................
-#=GC PP_cons       899**************99.77..99*************************......899.999999999999999............***99*99999.....*****************************786*******8877776*..87*****8777777866667666655555555556655.........
-#=GC RF            xxxxxxxxxxxxxxxxxxx.xx..xxxxxxxxxxxxxxxxxxxxxxxxxxx......xxx.xxxxxxxxxxxxxxx............xxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.........
+A0A016T530         --MRDMIAQLMGSQKEGEE.GR..DLPPYHHPSVCRAYLIGCCPYELVPDSRLQgLVSCRKTHEPAHKADFLKAQKERDHY.....YDVDAFDILENAIRIVDNEISRIKDKLDRE---------AREQTDT-..AE-----AVKTQR-------------------------................-----------
+#=GR A0A016T530 PP ..899**************.**..9************************99975499************************.....***************************992.........2233444...22.....222333....................................................
+A0A022RH43         DALRKQLDVLMGANRNGDT.EE..VSRKYYDRDVCRLFLAGLCPHELFQLTKMD.KGPCPKIHSLQLRKEYQEAKAKDVDN.....YDKDLEDNIDRLIVECDRKISRALKRLDEEDAKAAIAISVSEVTQAPdiIEISKQIKEKMKEADQADLEGNTDMKIRALELLDELRAtradkqatllldafnrDRASLPQPLIN
+#=GR A0A022RH43 PP 9******************.**..******************************.**************************.....**********************************************999************7777777777777777777777777677777777777777799999*******
+A0A024GB74         -------------------.--..----------------------------MD.LGECPKLHLSNLRTKYEKDT-NKSSG.....YEYELERELLRFISDLDKKIYRAQKRLEEQEGSKAPSLMDVENCKEV..LEITAEIQEAMLKAEEAGNEGQVDLSMELMEKVEDLKQ................KKADAQ-----
+#=GR A0A024GB74 PP ....................................................9*.****************9887.55678.....***********************************************..*****************999777766666666666544................332222.....
+A0A060S7T9         --QRKLLEQMMGPEAMGV-.SN..ANLHWSDEKVCRNFLCGTCPHTLFTNTKMD.LGACPKSHTERLKTEFLAAREANPNDpifarFQAEYEANIFAFVDECDRRIRAAHRRLEK--------------TPE-..-E--------NAKTTNLMRE------------------................-----------
+#=GR A0A060S7T9 PP ..7**************8..56..9*****************************.***********************9999*********************************..............999....6........7889999999.............................................
+A0A067BJQ2         DAQRALLDELMGRNRDGDKpQE..DIRDFRDQRVCKRFLCGLCPHDLFQNTKMD.MGECPKLHLPKLKLAYEEDRAKNQRDy...gYEADLERELVRYVSDVEKKISRALKRLDEQDGARVSSMLDIENNKEV..LEITAEIAELMQKAEDAGNEGEVDLSMELMAKVE----................-----------
+#=GR A0A067BJQ2 PP 9****************98356..789***************************.******************999999987...89****************************9999999999********..*************999999944333333222222...............................
+A0A081A1E7         DAQRALLDSLMGLNRDGDR.PDddATMDFRHPRVCKPYLCGLCPRELFQNTRLD.LGTCKSLHLPTLRLAYEEKKSTRDFG.....YERELANELSRLLADVEKKIARAQRRLAED-G------------DD-..-E------QAPAQILQLTQ-------------------................-----------
+#=GR A0A081A1E7 PP 9*****************7.5433899***************************.**************************.....*****************************2.1............11....2......11222333333..............................................
+#=GC PP_cons       9*9**************99.77..99**************************99.******************99*99999.....*****************************7*8*******8888877*..87*****8777777887779666655555555556655................666666*****
+#=GC RF            xxxxxxxxxxxxxxxxxxx.xx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx................xxxxxxxxxxx
 
-A0A016T530         .......-------------------INDLSEQIGKAVAEM--.--EELGNMGKVEESMKLSKTVEDLRARKAELEGQTDFRLAGPG---SNAARLRVCEDCGAQLNIMDHESRIADHFGGKMHLGMVECR
-#=GR A0A016T530 PP ..........................444445566667777.....99***************************999998776666...5899********************************99877
-A0A022RH43         lldafnrDRASLPQPLINAQQLTPVPAAISDPHIQEMINEKLK.KAEELGEQGMVDEAQKALEEAEALKKLPARQEPVLDSSKYTAADVRITDQKLRVCDICGAFLSVYDSDRRLADHFGGKLHLGYMLIR
-#=GR A0A022RH43 PP 77777799999********************************.**************************************************************************************9
-A0A024GB74         .......KKADAQ-------------ANAMLRSVQGVGIRP--.--PDYR-KGGLE-----------IKTAGLSELLPRNPLASTD-----VNQKLRVCDVCGAFLSIFDSDRRLANHFGGKLHLGYLQIR
-#=GR A0A024GB74 PP .......332222.............222223333333222.....1111.11111...........2222222112223333444.....46*************************************9
-A0A060S7T9         .......-------------------IAEIELAIQGGTEKI--.--ETLGEQGKVEESMREMAAIEALKSEKADKERELQQLTDTSGA--SGHQKLRVCDVCGAYLSVLDSDRRLADHFGGKMHLGYHELR
-#=GR A0A060S7T9 PP ..........................89999*****99888.....*****************************************9..***************************************99
-A0A061D5B0         .......-------------------TIAEAKRIDAEIEKKMK.IANELGEKGEVEESFKLLEEAELLKKNKLEMLEKAGETSYQS--------RIKPCDICGALLSATDTDRRLTEHYSGKIHVSYQKLR
-#=GR A0A061D5B0 PP ..........................22334577777889999.9*************************9887766665555554........4799******************************998
-A0A067BJQ2         .......------------------ALKVKKAALQGVPSAVLAsTAGADALMPEVDVAQATLMAVLPG-----------NPLAMTNV-----NQKLRVCDMCGAFLSIFDSDRRLADHFGGKMHLGYMQIR
-#=GR A0A067BJQ2 PP .........................2222233333333322110111112234566666666554322...........33444444.....6*************************************9
-A0A081A1E7         .......-------------------------DIQDAAA----.QAEKAAKEGNADRSLSMMEKVEMLKQKRRELLRQSNPGTSNAVD--NVNQKLRVCDVCGAFLSIFDSERRLADHFGGKVHVGYVQIR
-#=GR A0A081A1E7 PP ................................3333333.....457788899****************9877666666666666555..****************************************9
-#=GC PP_cons       .......666666************655555666666666677.66777788888899999999999898888877777666666678**988*9**********************************99
-#=GC RF            .......xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+A0A016T530         --------INDLSEQIGKAVAEM--.--EELGNMGKVEESMKLSKTVEDLRARKAELEGQTDFRLAGPG---SNAARLRVCEDCGAQLNIMDHESRIADHFGGKMHLGMVECR
+#=GR A0A016T530 PP ........444445566667777.....99***************************999998776666...5899********************************99877
+A0A022RH43         AQQLTPVPAAISDPHIQEMINEKLK.KAEELGEQGMVDEAQKALEEAEALKKLPARQEPVLDSSKYTAADVRITDQKLRVCDICGAFLSVYDSDRRLADHFGGKLHLGYMLIR
+#=GR A0A022RH43 PP *************************.**************************************************************************************9
+A0A024GB74         --------ANAMLRSVQGVGIRP--.--PDYR-KGGLE-----------IKTAGLSELLPRNPLASTD-----VNQKLRVCDVCGAFLSIFDSDRRLANHFGGKLHLGYLQIR
+#=GR A0A024GB74 PP ........222223333333222.....1111.11111...........2222222112223333444.....46*************************************9
+A0A060S7T9         --------IAEIELAIQGGTEKI--.--ETLGEQGKVEESMREMAAIEALKSEKADKERELQQLTDTSGA--SGHQKLRVCDVCGAYLSVLDSDRRLADHFGGKMHLGYHELR
+#=GR A0A060S7T9 PP ........89999*****99888.....*****************************************9..***************************************99
+A0A067BJQ2         -------ALKVKKAALQGVPSAVLAsTAGADALMPEVDVAQATLMAVLPG-----------NPLAMTNV-----NQKLRVCDMCGAFLSIFDSDRRLADHFGGKMHLGYMQIR
+#=GR A0A067BJQ2 PP .......2222233333333322110111112234566666666554322...........33444444.....6*************************************9
+A0A081A1E7         --------------DIQDAAA----.QAEKAAKEGNADRSLSMMEKVEMLKQKRRELLRQSNPGTSNAVD--NVNQKLRVCDVCGAFLSIFDSERRLADHFGGKVHVGYVQIR
+#=GR A0A081A1E7 PP ..............3333333.....457788899****************9877666666666666555..****************************************9
+#=GC PP_cons       *******655666656666656665.55667787788899999999998788888877777777777778**988************************************99
+#=GC RF            xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 //

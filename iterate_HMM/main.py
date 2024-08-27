@@ -473,6 +473,46 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir
         plt.legend(title='Clade')
         plt.grid(True)
         plt.savefig(f"i{iteration}.png")
+        plt.close()
+
+        # Additional plot: Proportion of Class within Clade
+        if (iteration > 1):
+            file_path = f'./input_csv/i{iteration}/aligned_real.fasta.csv'  # 需要替换 {iteration} 为实际迭代数
+            df = pd.read_csv(file_path)
+
+            # 计算 x 和 y 值
+            df['x'] = df['L2'] / df['Length']
+            df['y'] = df['L3'] / df['Length']
+
+            # Additional plot: Proportion of Class within Clade
+            plt.figure()
+            class_clade_counts = df.groupby(['Clade', 'Class']).size().unstack(fill_value=0)
+            class_clade_props = class_clade_counts.div(class_clade_counts.sum(axis=1), axis=0)
+
+            class_clade_props.plot(kind='barh', stacked=True, color=['blue', 'red', 'green'])  # Use 'barh' for horizontal bars
+            plt.title(f'Proportion of Clades within Classes (Iteration {iteration})')
+            plt.ylabel('Clade')  # y-axis label for Class
+            plt.xlabel('Proportion')  # x-axis label for Distribution
+            plt.legend(title='Clade')
+            plt.grid(True)
+            plt.tight_layout()
+            plt.savefig(f"i{iteration}_class_proportion.png")
+            plt.close()
+
+
+
+            # plt.figure(figsize=(10, 8))
+            # class_clade_counts = df.groupby(['Clade', 'Class']).size().unstack(fill_value=0)
+            # class_clade_props = class_clade_counts.div(class_clade_counts.sum(axis=1), axis=0)
+
+            # class_clade_props.plot(kind='bar', stacked=True, color=['blue', 'red', 'green'])
+            # plt.title(f'Proportion of Classes within Clades (Iteration {iteration})')
+            # plt.xlabel('Clade')
+            # plt.ylabel('Proportion')
+            # plt.legend(title='Class')
+            # plt.grid(True)
+            # plt.savefig(f"i{iteration}_class_proportion.png")
+            # plt.close()
 
     print("Pipeline completed successfully.")
 
