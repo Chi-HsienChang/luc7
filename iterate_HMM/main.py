@@ -501,7 +501,7 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=30, csv_di
             # Additional plot: Proportion of Class within Clade
             plt.figure()
             filtered_df = df[df['Class'] != 'No class info available']
-            class_clade_counts = df.groupby(['Clade', 'Class']).size().unstack(fill_value=0)
+            class_clade_counts = filtered_df.groupby(['Clade', 'Class']).size().unstack(fill_value=0)
             class_clade_props = class_clade_counts.div(class_clade_counts.sum(axis=1), axis=0)
 
             class_clade_props.plot(kind='barh', stacked=True, color=['blue', 'red', 'green'])  # Use 'barh' for horizontal bars
