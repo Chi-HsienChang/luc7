@@ -203,7 +203,7 @@ def calculate_thresholds(thresholds_files):
         min_sps = min(min_sps, df['SPS'].min())
     return {'L2': max_sps, 'L3': min_sps}
 
-def run_cd_hit(fasta_input, fasta_output, threshold=0.8, word_size=5):
+def run_cd_hit(fasta_input, fasta_output, threshold=0.7, word_size=5):
     """Run CD-HIT to cluster sequences."""
     cmd = f"cd-hit -i {fasta_input} -o {fasta_output} -c {threshold} -n { word_size}"
     subprocess.run(cmd, shell=True, check=True)
@@ -290,6 +290,15 @@ def plot_combined_clade_frequencies(l2_df, l3_df, iteration, output_dir):
     plt.close()
 ############################################################################################
 
+def extract_names_from_fasta(fasta_file):
+    """
+    Extract names from a FASTA file.
+    """
+    with open(fasta_file, 'r') as file:
+        records = SeqIO.parse(file, "fasta")
+        names = {record.id.split('|')[0] for record in records}
+    return names
+
 def main_pipeline(thresholds_file, real_file, decoy_files, iterations=10, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'): 
     num_decoy = 10000
     setup_directory(output_dir)
@@ -306,7 +315,7 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=10, csv_di
 
         for file in real_file: # for file in real_file + decoy_files:
             df = pd.read_csv(file)
-            print(df)
+            # print(df)
             df = calculate_sps(df)
             df = classify_proteins(df, thresholds) # [2] Classify proteins
             processed_filename = os.path.join(output_dir, f'nonsplit_iteration_{iteration}_{os.path.basename(file)}')
@@ -324,19 +333,22 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=10, csv_di
                 l3_df = df[df['Classification'] == 'L3-type']
                 non_df = df[df['Classification'] == 'Unclassified'] 
 
-                if iteration > 1:
-                    png_dir = './png' 
-                    # Plot combined clade frequencies for L2-type and L3-type
-                    if not l2_df.empty or not l3_df.empty:
-                        plot_combined_clade_frequencies(l2_df, l3_df, iteration, png_dir)
+                l2_df_clade = l2_df.copy()
+                l3_df_clade = l3_df.copy()
+
+                # if iteration > 1:
+                #     png_dir = './png' 
+                #     # Plot combined clade frequencies for L2-type and L3-type
+                #     if not l2_df.empty or not l3_df.empty:
+                #         plot_combined_clade_frequencies(l2_df, l3_df, iteration, png_dir)
 
 
-                    # if not l2_df.empty:
-                    #     plot_clade_frequencies(l2_df, 'L2-type', iteration, png_dir)
-                
-                    # # Plot clade frequencies for L3-type
-                    # if not l3_df.empty:
-                    #     plot_clade_frequencies(l3_df, 'L3-type', iteration, png_dir)               
+                # if not l2_df.empty:
+                #     plot_clade_frequencies(l2_df, 'L2-type', iteration, png_dir)
+            
+                # # Plot clade frequencies for L3-type
+                # if not l3_df.empty:
+                #     plot_clade_frequencies(l3_df, 'L3-type', iteration, png_dir)               
 
                 ############################################################################################
                 ############################################################################################
@@ -380,6 +392,26 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=10, csv_di
                 run_cd_hit(l2_fasta, l2_clustered_fasta)
                 run_cd_hit(l3_fasta, l3_clustered_fasta)
                 # run_cd_hit(all_L7_fasta, all_L7_clustered) # all_L7
+
+
+                # # remove the name not in the l2_clustered_fasta
+                # l2_df_clade = l2_df_clade
+                # # remove the name not in the l3_clustered_fasta
+                # l3_df_clade = l3_df_clade
+
+                if iteration > 1:
+
+                    # Extract names from clustered FASTA files
+                    l2_clustered_names = extract_names_from_fasta(l2_clustered_fasta)
+                    l3_clustered_names = extract_names_from_fasta(l3_clustered_fasta)
+
+                    # Remove names not in the clustered FASTA files
+                    l2_df_clade = l2_df_clade[l2_df_clade['name'].isin(l2_clustered_names)]
+                    l3_df_clade = l3_df_clade[l3_df_clade['name'].isin(l3_clustered_names)]
+                    png_dir = './png' 
+                    # Plot combined clade frequencies for L2-type and L3-type
+                    if not l2_df.empty or not l3_df.empty:
+                        plot_combined_clade_frequencies(l2_df_clade, l3_df_clade, iteration, png_dir)
 
                 # Align with previous iteration's HMM
                 l2_hmm_file = os.path.join(hmm_dir, f'L2_i{iteration}.hmm')
