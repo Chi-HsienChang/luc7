@@ -255,10 +255,43 @@ def plot_clade_frequencies(df, classification, iteration, output_dir):
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, f'{classification}_clade_frequency_iteration_{iteration}.png'))
     plt.close()
+
+def plot_combined_clade_frequencies(l2_df, l3_df, iteration, output_dir):
+    """
+    Plots the frequency of different clades for L2-type and L3-type in a single figure.
+    
+    Parameters:
+    l2_df (DataFrame): The DataFrame containing the L2-type protein classifications.
+    l3_df (DataFrame): The DataFrame containing the L3-type protein classifications.
+    iteration (int): The current iteration number.
+    output_dir (str): Directory to save the plots.
+    """
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(16, 6), sharey=True)
+
+    # Plot for L2-type
+    if not l2_df.empty:
+        l2_clade_counts = l2_df['Clade'].value_counts()
+        l2_clade_counts.plot(kind='bar', color='skyblue', ax=axes[0])
+        axes[0].set_title(f'L2-type Clade Frequency (Iteration {iteration})')
+        axes[0].set_xlabel('Clade')
+        axes[0].set_ylabel('Frequency')
+        axes[0].set_xticklabels(axes[0].get_xticklabels(), rotation=45, ha='right')
+
+    # Plot for L3-type
+    if not l3_df.empty:
+        l3_clade_counts = l3_df['Clade'].value_counts()
+        l3_clade_counts.plot(kind='bar', color='lightcoral', ax=axes[1])
+        axes[1].set_title(f'L3-type Clade Frequency (Iteration {iteration})')
+        axes[1].set_xlabel('Clade')
+        axes[1].set_xticklabels(axes[1].get_xticklabels(), rotation=45, ha='right')
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f'combined_clade_frequency_iteration_{iteration}.png'))
+    plt.close()
 ############################################################################################
 
 def main_pipeline(thresholds_file, real_file, decoy_files, iterations=10, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'): 
-    num_decoy = 10
+    num_decoy = 10000
     setup_directory(output_dir)
     setup_directory(csv_dir)
     setup_directory(hmm_dir)
@@ -293,12 +326,17 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=10, csv_di
 
                 if iteration > 1:
                     png_dir = './png' 
-                    if not l2_df.empty:
-                        plot_clade_frequencies(l2_df, 'L2-type', iteration, png_dir)
+                    # Plot combined clade frequencies for L2-type and L3-type
+                    if not l2_df.empty or not l3_df.empty:
+                        plot_combined_clade_frequencies(l2_df, l3_df, iteration, png_dir)
+
+
+                    # if not l2_df.empty:
+                    #     plot_clade_frequencies(l2_df, 'L2-type', iteration, png_dir)
                 
-                    # Plot clade frequencies for L3-type
-                    if not l3_df.empty:
-                        plot_clade_frequencies(l3_df, 'L3-type', iteration, png_dir)               
+                    # # Plot clade frequencies for L3-type
+                    # if not l3_df.empty:
+                    #     plot_clade_frequencies(l3_df, 'L3-type', iteration, png_dir)               
 
                 ############################################################################################
                 ############################################################################################
