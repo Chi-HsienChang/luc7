@@ -237,12 +237,14 @@ def combine_fasta_files(file_list, output_file):
 
 ############################################################################################
 
-def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'): 
-    num_decoy = 10
+def main_pipeline(thresholds_file, real_file, decoy_files, iterations=30, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'): 
+    num_decoy = 10000
     setup_directory(output_dir)
     setup_directory(csv_dir)
     setup_directory(hmm_dir)
     setup_directory(representative)
+
+    previous_classifications = None # termination condition
 
     for iteration in range(1,iterations+1):
         thresholds_file = [f'./input_csv/i{iteration}/all_L7_decoy_iteration_{iteration}.fasta.csv']
@@ -264,6 +266,18 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir
                 l3_df = df[df['Classification'] == 'L3-type']
                 non_df = df[df['Classification'] == 'Unclassified'] 
 
+                # termination condition
+                current_classifications = df[['name', 'Classification']].copy()
+                if previous_classifications is not None:
+                    # Check if the classifications have changed
+                    if current_classifications.equals(previous_classifications):
+                        print(f"No new classifications in iteration {iteration}. Terminating early.")
+                        return  # Exit the function early if no new classifications are found
+
+                # Update the previous_classifications with the current classifications
+                previous_classifications = current_classifications
+
+                ############################################################################################
                 l2_filename = os.path.join(output_dir, f'L2_type_iteration_{iteration}_{os.path.basename(file)}')
                 l3_filename = os.path.join(output_dir, f'L3_type_iteration_{iteration}_{os.path.basename(file)}')
                 # all_L7_filename = os.path.join(output_dir, f'all_L7_iteration_{iteration}_{os.path.basename(file)}') 
@@ -472,7 +486,7 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir
         plt.title(f'Iteration {iteration} with {num_decoy} decoys')
         plt.legend(title='Clade')
         plt.grid(True)
-        plt.savefig(f"i{iteration}.png")
+        plt.savefig(f"./png/i{iteration}.png")
         plt.close()
 
         # Additional plot: Proportion of Class within Clade
@@ -496,7 +510,7 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir
             plt.legend(title='Clade')
             plt.grid(True)
             plt.tight_layout()
-            plt.savefig(f"i{iteration}_class_proportion.png")
+            plt.savefig(f"./png/i{iteration}_class_proportion.png")
             plt.close()
 
 
