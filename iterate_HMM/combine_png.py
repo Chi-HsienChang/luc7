@@ -15,7 +15,7 @@ def show_images_grid(image_paths, dpi=300):
     plt.savefig('images_grid.png')  # 將圖表儲存為圖片檔案
 
 # 圖片檔案名稱列表
-image_files = [f'i{n}.png' for n in range(1, 10)]
+image_files = [f'./png/i{n}_class_proportion.png' for n in range(2, 11)]
 
 # 呼叫函數顯示圖片
 show_images_grid(image_files, dpi=500)
