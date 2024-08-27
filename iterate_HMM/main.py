@@ -235,10 +235,30 @@ def combine_fasta_files(file_list, output_file):
                 for line in infile:
                     outfile.write(line)
 
+def plot_clade_frequencies(df, classification, iteration, output_dir):
+    """
+    Plots the frequency of different clades in the given DataFrame.
+    
+    Parameters:
+    df (DataFrame): The DataFrame containing the protein classifications.
+    classification (str): The classification type (e.g., 'L2-type' or 'L3-type').
+    iteration (int): The current iteration number.
+    output_dir (str): Directory to save the plots.
+    """
+    plt.figure(figsize=(10, 6))
+    clade_counts = df['Clade'].value_counts()
+    clade_counts.plot(kind='bar', color='skyblue')
+    plt.title(f'Frequency of Clades in {classification} (Iteration {iteration})')
+    plt.xlabel('Clade')
+    plt.ylabel('Frequency')
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, f'{classification}_clade_frequency_iteration_{iteration}.png'))
+    plt.close()
 ############################################################################################
 
-def main_pipeline(thresholds_file, real_file, decoy_files, iterations=30, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'): 
-    num_decoy = 10000
+def main_pipeline(thresholds_file, real_file, decoy_files, iterations=10, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'): 
+    num_decoy = 10
     setup_directory(output_dir)
     setup_directory(csv_dir)
     setup_directory(hmm_dir)
@@ -257,7 +277,11 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=30, csv_di
             df = calculate_sps(df)
             df = classify_proteins(df, thresholds) # [2] Classify proteins
             processed_filename = os.path.join(output_dir, f'nonsplit_iteration_{iteration}_{os.path.basename(file)}')
-            column_order = ['name', 'L2', 'L3', 'Length', 'SPS', 'Classification', 'AA']
+            if iteration == 1:
+                column_order = ['name', 'L2', 'L3', 'Length', 'SPS', 'Classification', 'AA']
+            else:
+                column_order = ['name', 'L2', 'L3', 'Length', 'SPS', 'Classification', 'AA', 'Clade']
+
             df = df[column_order]
             df.to_csv(processed_filename, index=False)
             
@@ -267,6 +291,18 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=30, csv_di
                 l3_df = df[df['Classification'] == 'L3-type']
                 non_df = df[df['Classification'] == 'Unclassified'] 
 
+                if iteration > 1:
+                    png_dir = './png' 
+                    if not l2_df.empty:
+                        plot_clade_frequencies(l2_df, 'L2-type', iteration, png_dir)
+                
+                    # Plot clade frequencies for L3-type
+                    if not l3_df.empty:
+                        plot_clade_frequencies(l3_df, 'L3-type', iteration, png_dir)               
+
+                ############################################################################################
+                ############################################################################################
+                ############################################################################################
                 # termination condition
                 current_classifications = df[['name', 'Classification']].copy()
                 if previous_classifications is not None:
