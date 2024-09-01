@@ -738,8 +738,6 @@
 >Cluster 22
 0	245aa, >A0A6H5K8V8... *
 >Cluster 23
-0	241aa, >A0A7S4UCG5... *
->Cluster 24
 0	217aa, >A0A081A1E7... at 60.37%
 1	241aa, >A0A8T1WIA6... *
 2	230aa, >M4B1P6... at 72.17%
@@ -749,7 +747,7 @@
 6	217aa, >W2Q4I8... at 60.83%
 7	217aa, >W2WW86... at 60.37%
 8	217aa, >W2Z3F7... at 60.37%
->Cluster 25
+>Cluster 24
 0	221aa, >A0A060S7T9... at 92.76%
 1	221aa, >A0A067MQG0... at 85.97%
 2	221aa, >A0A067NZZ9... at 92.31%
@@ -935,14 +933,14 @@
 182	221aa, >S8ELS9... at 92.31%
 183	221aa, >V2YSF4... at 90.95%
 184	221aa, >W4KJQ2... at 89.14%
->Cluster 26
+>Cluster 25
 0	228aa, >A0A196SCY6... *
->Cluster 27
+>Cluster 26
 0	226aa, >A0A2P6NSE9... *
->Cluster 28
+>Cluster 27
 0	223aa, >A0A0E0GWB3... *
 1	223aa, >A0A0E0GWB4... at 100.00%
->Cluster 29
+>Cluster 28
 0	217aa, >A0A0P1B1J7... at 65.44%
 1	217aa, >A0A329T2L6... at 69.59%
 2	206aa, >A0A3M6VRX6... at 62.62%
@@ -958,13 +956,13 @@
 12	213aa, >A0A976IAY6... at 66.20%
 13	214aa, >A0AAD9H0P0... at 66.36%
 14	216aa, >G4YH12... at 65.74%
->Cluster 30
+>Cluster 29
 0	214aa, >A0A2B4R9V1... at 61.68%
 1	222aa, >A0A7M5V1X3... *
->Cluster 31
+>Cluster 30
 0	210aa, >A0A668V388... at 90.48%
 1	216aa, >A0A6A4SXN7... at 86.11%
 2	218aa, >A0A8J7NRB9... *
->Cluster 32
+>Cluster 31
 0	212aa, >A0A7C8M6W3... *
 1	212aa, >A0A9W8WYM8... at 75.94%
