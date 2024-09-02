@@ -14,6 +14,9 @@ warnings.filterwarnings("ignore", category=UserWarning, module="scipy")
 import glob
 import csv
 import matplotlib.pyplot as plt
+import random
+import numpy as np
+from ipdb import set_trace
 
 # L2 名稱集合
 L2_name = {
@@ -278,7 +281,11 @@ def extract_names_from_fasta(fasta_file):
         names = {record.id.split('|')[0] for record in records}
     return names
 
-def main_pipeline(thresholds_file, real_file, decoy_files, iterations=10, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'): 
+def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'):
+    # Set random seed for reproducibility
+    seed = 29617
+    random.seed(seed)
+    np.random.seed(seed) 
     num_decoy = 10000
     setup_directory(output_dir)
     setup_directory(csv_dir)
@@ -445,7 +452,7 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=10, csv_di
             output_csv_path = os.path.join(csv_dir, f"i{iteration+1}/{os.path.basename(fasta_file)}.csv")
 
             with open(output_csv_path, 'w', newline='') as csvfile:
-                fieldnames = ['name', 'L2', 'L3', 'Length', 'AA', 'Clade', 'Class']
+                fieldnames = ['name', 'taxID', 'L2', 'L3', 'Length', 'AA', 'Clade', 'Class']
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 writer.writeheader()
 
@@ -481,11 +488,12 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=10, csv_di
                         # Attempt to get the classification from the dataframe
                         classification2 = df.loc[df['name'] == name.split('|')[0], 'Classification'].values[0] if not df[df['name'] == name.split('|')[0]].empty else 'No class info available'
                         
-                        writer.writerow({'name': name.split('|')[0], 'L2': f"{l2_score:.2f}" if l2_score != "N/A" else "N/A",
+                        # set_trace()
+                        writer.writerow({'name': name.split('|')[0], 'taxID': name_to_taxID[name.split('|')[0]], 'L2': f"{l2_score:.2f}" if l2_score != "N/A" else "N/A",
                                         'L3': f"{l3_score:.2f}" if l3_score != "N/A" else "N/A", 'Length': length, 'AA': aa,
                                         'Clade': name_to_lineage[name.split('|')[0]].split(',')[3], 'Class': classification2})
                     else:
-                        writer.writerow({'name': name.split('-')[1], 'L2': f"{l2_score:.2f}" if l2_score != "N/A" else "N/A",
+                        writer.writerow({'name': name.split('-')[1], 'taxID': 'NA', 'L2': f"{l2_score:.2f}" if l2_score != "N/A" else "N/A",
                                         'L3': f"{l3_score:.2f}" if l3_score != "N/A" else "N/A", 'Length': length, 'AA': aa,
                                         'Clade': 'Decoy', 'Class': 'Decoy'})
 
@@ -604,6 +612,7 @@ taxid_to_lineage = {str(row['Taxid']): row['Named Lineage'] for index, row in ts
 
 # Initialize a dictionary to hold the mapping from FASTA name to Named Lineage
 name_to_lineage = {}
+name_to_taxID = {}
 
 # Process the FASTA file
 with open(fasta_file_path, 'r') as fasta_file:
@@ -619,7 +628,7 @@ with open(fasta_file_path, 'r') as fasta_file:
             named_lineage = taxid_to_lineage.get(taxID, 'NA,NA,NA,NA,NA')
             # Map the name to its corresponding Named Lineage
             name_to_lineage[name] = named_lineage
-
+            name_to_taxID[name] = taxID
 
 
 
