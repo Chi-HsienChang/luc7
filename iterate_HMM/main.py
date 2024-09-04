@@ -206,7 +206,7 @@ def calculate_thresholds(thresholds_files):
         min_sps = min(min_sps, df['SPS'].min())
     return {'L2': max_sps, 'L3': min_sps}
 
-def run_cd_hit(fasta_input, fasta_output, threshold=0.6, word_size=4):
+def run_cd_hit(fasta_input, fasta_output, threshold=0.8, word_size=4):
     """Run CD-HIT to cluster sequences."""
     cmd = f"cd-hit -i {fasta_input} -o {fasta_output} -c {threshold} -n { word_size}"
     subprocess.run(cmd, shell=True, check=True)
@@ -228,7 +228,7 @@ def convert_csv_to_fasta(csv_file, fasta_file):
 def train_hmm(sto_file, hmm_output):
     """Train HMM model from Stockholm file."""
     # cmd = f"hmmbuild {hmm_output} {sto_file}"
-    cmd = f"hmmbuild --fast --symfrac 0.9 {hmm_output} {sto_file}"
+    cmd = f"hmmbuild --fast --symfrac 0.9 --fragthresh 1 {hmm_output} {sto_file}"
     run_external_command(cmd)
 
 def combine_fasta_files(file_list, output_file):
@@ -635,8 +635,8 @@ with open(fasta_file_path, 'r') as fasta_file:
             named_lineage = taxid_to_lineage.get(taxID, 'NA,NA,NA,NA,NA')
             # Map the name to its corresponding Named Lineage
             name_to_lineage[name] = named_lineage
+            print(named_lineage)
             name_to_taxID[name] = taxID
-
 
 
 main_pipeline(thresholds_file, real_file, decoy_files)
