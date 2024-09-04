@@ -227,7 +227,8 @@ def convert_csv_to_fasta(csv_file, fasta_file):
 
 def train_hmm(sto_file, hmm_output):
     """Train HMM model from Stockholm file."""
-    cmd = f"hmmbuild {hmm_output} {sto_file}"
+    # cmd = f"hmmbuild {hmm_output} {sto_file}"
+    cmd = f"hmmbuild --fast --symfrac 0.9 {hmm_output} {sto_file}"
     run_external_command(cmd)
 
 def combine_fasta_files(file_list, output_file):
@@ -281,7 +282,7 @@ def extract_names_from_fasta(fasta_file):
         names = {record.id.split('|')[0] for record in records}
     return names
 
-def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'):
+def main_pipeline(thresholds_file, real_file, decoy_files, iterations=6, csv_dir = './input_csv', output_dir='./result_test', hmm_dir='./trained_hmm/', representative='./result_test/representative/'):
     # Set random seed for reproducibility
     seed = 29617
     random.seed(seed)
@@ -416,11 +417,11 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir
                 decoy_proteins_dir = os.path.join(output_dir, 'decoy_fasta')
                 setup_directory(decoy_proteins_dir)
                 destination = os.path.join(decoy_proteins_dir, f"all_L7_decoy_iteration_{iteration+1}.fasta")
-                hmm_file = all_L7_output
+                hmm_file_all = all_L7_output
                 
 
                 # 调用hmmemit命令
-                command = f"hmmemit -o {destination} -N {num_decoy} {hmm_file}"
+                command = f"hmmemit -o {destination} -N {num_decoy} {hmm_file_all}"
                 subprocess.run(command, shell=True, check=True)
 
                 ############################################################################################
@@ -428,11 +429,14 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir
                 ############################################################################################
 
         # 加載 L2 和 L3 模型
-        with pyhmmer.plan7.HMMFile(l2_hmm_output) as hmm_file:
-            hmm_L2 = next(hmm_file)
+        with pyhmmer.plan7.HMMFile(l2_hmm_output) as hmm_file_L2:
+            hmm_L2 = next(hmm_file_L2)
 
-        with pyhmmer.plan7.HMMFile(l3_hmm_output) as hmm_file:
-            hmm_L3 = next(hmm_file)
+        with pyhmmer.plan7.HMMFile(l3_hmm_output) as hmm_file_L3:
+            hmm_L3 = next(hmm_file_L3)
+
+        with pyhmmer.plan7.HMMFile(all_L7_output) as hmm_file_All:
+            hmm_all = next(hmm_file_All)
 
         # 創建字母表
         alphabet = pyhmmer.easel.Alphabet.amino()
@@ -452,7 +456,7 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir
             output_csv_path = os.path.join(csv_dir, f"i{iteration+1}/{os.path.basename(fasta_file)}.csv")
 
             with open(output_csv_path, 'w', newline='') as csvfile:
-                fieldnames = ['name', 'taxID', 'L2', 'L3', 'Length', 'AA', 'Clade', 'Class']
+                fieldnames = ['name', 'taxID', 'L2', 'L3', 'All', 'Length', 'AA', 'Clade', 'Class']
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 writer.writeheader()
 
@@ -473,15 +477,18 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir
                 # 使用 DigitalSequenceList 包裝序列
                 hits_L2 = pipeline.search_hmm(query=hmm_L2, sequences=sequences)
                 hits_L3 = pipeline.search_hmm(query=hmm_L3, sequences=sequences)
+                hits_All = pipeline.search_hmm(query=hmm_all, sequences=sequences)
 
             # 構建名稱和分數字典以便於查找
                 l2_scores = {hit.domains[0].alignment.target_name.decode(): hit.score for hit in hits_L2}
                 l3_scores = {hit.domains[0].alignment.target_name.decode(): hit.score for hit in hits_L3}
+                all_scores = {hit.domains[0].alignment.target_name.decode(): hit.score for hit in hits_All}
 
                 for seq in search_sequences:
                     name = seq.name.decode()
                     l2_score = l2_scores.get(name, "N/A")
                     l3_score = l3_scores.get(name, "N/A")
+                    all_score = all_scores.get(name, "N/A")
                     length, aa = len(seq.sequence), seq.sequence
                     
                     if fasta_file in real_fasta:
@@ -490,11 +497,11 @@ def main_pipeline(thresholds_file, real_file, decoy_files, iterations=9, csv_dir
                         
                         # set_trace()
                         writer.writerow({'name': name.split('|')[0], 'taxID': name_to_taxID[name.split('|')[0]], 'L2': f"{l2_score:.2f}" if l2_score != "N/A" else "N/A",
-                                        'L3': f"{l3_score:.2f}" if l3_score != "N/A" else "N/A", 'Length': length, 'AA': aa,
+                                        'L3': f"{l3_score:.2f}" if l3_score != "N/A" else "N/A", 'All': f"{all_score:.2f}" if all_score != "N/A" else "N/A", 'Length': length, 'AA': aa,
                                         'Clade': name_to_lineage[name.split('|')[0]].split(',')[3], 'Class': classification2})
                     else:
                         writer.writerow({'name': name.split('-')[1], 'taxID': 'NA', 'L2': f"{l2_score:.2f}" if l2_score != "N/A" else "N/A",
-                                        'L3': f"{l3_score:.2f}" if l3_score != "N/A" else "N/A", 'Length': length, 'AA': aa,
+                                        'L3': f"{l3_score:.2f}" if l3_score != "N/A" else "N/A", 'All': f"{all_score:.2f}" if all_score != "N/A" else "N/A", 'Length': length, 'AA': aa,
                                         'Clade': 'Decoy', 'Class': 'Decoy'})
 
 
